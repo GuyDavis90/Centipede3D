@@ -96,6 +96,9 @@ class GameServer(ShowBase):
         self.server.sendData(('client', user.name), user.connection)
 
     def returnToLobby(self):
+        self.taskMgr.doMethodLater(0.5, self.cleanupAndStartLobby, 'Return To Lobby')
+
+    def cleanupAndStartLobby(self, task):
         self.cleanupGame()
 
         for currentPlayer in self.currentPlayers:
@@ -105,6 +108,8 @@ class GameServer(ShowBase):
                 self.server.sendData(('ready', (existing.name, existing.ready)), currentPlayer.connection)
 
         self.taskMgr.doMethodLater(0.5, self.lobbyLoop, 'Lobby Loop')
+
+        return task.done
 
     def lobbyLoop(self, task):
         temp = self.getData()
