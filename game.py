@@ -69,6 +69,9 @@ class Game(DirectObject):
         self.ignoreAll()
         self.collHandEvent.clear()
         self.ambientLight.removeNode()
+        if self.spotlight:
+            self.showbase.render.clearLight(self.spotlight)
+            self.spotlight.removeNode()
         self.world.destroy()
         for user in self.usersData:
             user.centipede.destroy()
